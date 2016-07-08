@@ -25,7 +25,8 @@ public class SeleniumManager {
 	
 	public static void main(String[] args) {
 		
-		SeleniumManager manager = new SeleniumManager("www.google.com", Selenium.createProxy("proxy", 8080));
+//		SeleniumManager manager = new SeleniumManager("www.google.com", Selenium.createProxy("proxy", 8080));
+		SeleniumManager manager = new SeleniumManager("http://www.google.com");
 		manager.init();
 		
 		// código aqui...
