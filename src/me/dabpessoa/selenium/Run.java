@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
+import me.dabpessoa.util.RegexUtils;
+
 public class Run {
 
 	public static void main(String[] args) {
@@ -12,7 +14,7 @@ public class Run {
 		manager.addURLPath("find");
 		manager.addURLParam("ref_", "nv_sr_fn");
 		manager.addURLParam("s", "tt");
-		manager.addURLParam("q", "Batman superman");
+		manager.addURLParam("q", "À Procura de Dory");
 		
 		manager.init();
 		
@@ -27,9 +29,22 @@ public class Run {
 			manager.click(movieResultLink);
 			
 			WebElement movieTitleElement = manager.findFirstElementBySelector("#title-overview-widget > div.vital > div.title_block > div > div.titleBar > div.title_wrapper > h1");
-			String movieTitleText = movieTitleElement.getText();
 			
-			System.out.println(movieTitleText);
+			// Movie Title
+			String movieTitleText = movieTitleElement.getText();
+			movieTitleText = RegexUtils.replaceMatches("(\\([0-9]*\\)$)", movieTitleText, "");
+			if (movieTitleText != null) movieTitleText = movieTitleText.trim();
+			
+			// Ano de Lançamento
+			String releaseYearString = RegexUtils.findFirstMatche("(\\([0-9]*\\)$)", movieTitleElement.getText());
+			Integer releaseYear = null;
+			if (releaseYearString != null && releaseYearString.trim().length() == 6) {
+				releaseYearString = releaseYearString.trim();
+				releaseYear = Integer.parseInt(releaseYearString.substring(1,5));
+			}
+			
+			// Imprimir
+			System.out.println(movieTitleText+" => "+releaseYear);
 			
 			manager.navigateBack();
 		}
