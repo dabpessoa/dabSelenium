@@ -74,16 +74,15 @@ public class Selenium {
 			return;
 		}
 		
-		String newURL = getUrl();
 		String paramsString = null;
-		if (newURL.indexOf(URL_PARAM_SIGNAL) != -1) {
-			paramsString = newURL.substring(newURL.indexOf(URL_PARAM_SIGNAL));
-			newURL = newURL.substring(0, newURL.indexOf(URL_PARAM_SIGNAL));
+		if (getUrl().indexOf(URL_PARAM_SIGNAL) != -1) {
+			paramsString = getUrl().substring(getUrl().indexOf(URL_PARAM_SIGNAL));
+			setUrl(getUrl().substring(0, getUrl().indexOf(URL_PARAM_SIGNAL)));
 		}
 		
-		newURL = newURL + URL_PATH_SEPARATOR + path;
+		setUrl(getUrl() + URL_PATH_SEPARATOR + path);
 		if (paramsString != null) {
-			newURL += paramsString;
+			setUrl(getUrl() + paramsString);
 		}
 	}
 	

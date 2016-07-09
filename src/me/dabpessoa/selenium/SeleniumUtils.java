@@ -1,5 +1,7 @@
 package me.dabpessoa.selenium;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -23,7 +25,7 @@ public class SeleniumUtils {
 		});
 	}
 	
-	public static WebElement waitAndSearchElement(WebDriver driver, int waitTime, String selector) {
+	public static WebElement waitAndSearchFirstElement(WebDriver driver, int waitTime, String selector) {
 		try {
 			return (new WebDriverWait(driver, waitTime)).until(new ExpectedCondition<WebElement>() {
 				public WebElement apply(WebDriver d) {
@@ -37,10 +39,32 @@ public class SeleniumUtils {
 		}
 	}
 	
+	public static List<WebElement> waitAndSearchElements(WebDriver driver, int waitTime, String selector) {
+		try {
+			return (new WebDriverWait(driver, waitTime)).until(new ExpectedCondition<List<WebElement>>() {
+				public List<WebElement> apply(WebDriver d) {
+					return driver.findElements(By.cssSelector(selector));
+				}
+			});
+		} catch (TimeoutException e) {
+			return null;
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+	
 	public static WebElement waitAndSearchElementByXPath(WebDriver driver, int waitTime, String xPath) {
 		return (new WebDriverWait(driver, waitTime)).until(new ExpectedCondition<WebElement>() {
 			public WebElement apply(WebDriver d) {
 				return driver.findElement(By.xpath(xPath));
+			}
+		});
+	}
+	
+	public static List<WebElement> waitAndSearchElementsByXPath(WebDriver driver, int waitTime, String xPath) {
+		return (new WebDriverWait(driver, waitTime)).until(new ExpectedCondition<List<WebElement>>() {
+			public List<WebElement> apply(WebDriver d) {
+				return driver.findElements(By.xpath(xPath));
 			}
 		});
 	}
