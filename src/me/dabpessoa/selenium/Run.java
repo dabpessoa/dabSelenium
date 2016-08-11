@@ -9,12 +9,12 @@ import me.dabpessoa.util.RegexUtils;
 public class Run {
 
 	public static void main(String[] args) {
-//		SeleniumManager manager = new SeleniumManager("www.google.com", Selenium.createProxy("proxy", 8080));
+//		SeleniumManager manager = new SeleniumManager("http://www.imdb.com", Selenium.createProxy("proxy", 8080));
 		SeleniumManager manager = new SeleniumManager("http://www.imdb.com");
 		manager.addURLPath("find");
 		manager.addURLParam("ref_", "nv_sr_fn");
 		manager.addURLParam("s", "tt");
-		manager.addURLParam("q", "À Procura de Dory");
+		manager.addURLParam("q", "À+Procura+de+Dory");
 		
 		manager.init();
 		
