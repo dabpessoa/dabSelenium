@@ -14,7 +14,7 @@ public class Run {
 		manager.addURLPath("find");
 		manager.addURLParam("ref_", "nv_sr_fn");
 		manager.addURLParam("s", "tt");
-		manager.addURLParam("q", "À+Procura+de+Dory");
+		manager.addURLParam("q", "À Procura de Dory");
 		
 		manager.init();
 		
