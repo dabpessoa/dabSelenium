@@ -44,6 +44,7 @@ public class Selenium {
 			cap.setCapability(CapabilityType.PROXY, createSeleniumProxy(proxyCredentials));
 			
 			driver = new HtmlUnitDriver(cap);
+//			WebClient client = new WebClient(BrowserVersion.getDefault());
 		} else {
 			driver = new HtmlUnitDriver();
 		}
@@ -90,13 +91,24 @@ public class Selenium {
 		return new ProxyCredentials(host, port);
 	}
 	
+	public static ProxyCredentials createProxy(String host, int port, String user, String password) {
+		return new ProxyCredentials(host, port, user, password);
+	}
+	
 	private Proxy createSeleniumProxy(ProxyCredentials proxyCredentials) {
+		if (proxyCredentials == null) {
+			return null;
+		}
+		
 		String PROXY = proxyCredentials.getHost()+":"+proxyCredentials.getPort();
 
 		Proxy proxy = new Proxy();
 		proxy.setHttpProxy(PROXY)
 		     .setFtpProxy(PROXY)
 		     .setSslProxy(PROXY);
+//		     .setSocksProxy(PROXY)
+//		     .setSocksUsername(proxyCredentials.getUser())
+//		     .setSocksPassword(proxyCredentials.getPassword());
 		
 		return proxy;
 	}

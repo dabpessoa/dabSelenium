@@ -25,6 +25,10 @@ public class SeleniumManager {
 		
 	}
 	
+	public String getPageSource() {
+		return selenium.getDriver().getPageSource();
+	}
+	
 	public void findAndClickBySelector(String selector) {
 		click(findFirstElementBySelector(selector));
 	}
