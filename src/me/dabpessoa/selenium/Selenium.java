@@ -2,7 +2,6 @@ package me.dabpessoa.selenium;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -40,11 +39,10 @@ public class Selenium {
 		}
 		
 		if (proxyCredentials != null) {
-			DesiredCapabilities cap = new DesiredCapabilities();
+			DesiredCapabilities cap = DesiredCapabilities.htmlUnitWithJs();
 			cap.setCapability(CapabilityType.PROXY, createSeleniumProxy(proxyCredentials));
-			
+
 			driver = new HtmlUnitDriver(cap);
-//			WebClient client = new WebClient(BrowserVersion.getDefault());
 		} else {
 			driver = new HtmlUnitDriver();
 		}
@@ -52,7 +50,7 @@ public class Selenium {
 	
 	public void addParam(String paramName, String paramValue) {
 		/*
-		 * Pensar em uma forma de tratar parâmetros repetidos.
+		 * Pensar em uma forma de tratar parï¿½metros repetidos.
 		 */
 		if (paramName != null && paramValue != null) {
 			paramsMap.put(paramName, paramValue);

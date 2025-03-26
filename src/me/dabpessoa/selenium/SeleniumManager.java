@@ -1,5 +1,6 @@
 package me.dabpessoa.selenium;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -40,13 +41,37 @@ public class SeleniumManager {
 	public List<WebElement> findElementsBySelector(String selector) {
 		return selenium.getDriver().findElements(By.cssSelector(selector));
 	}
+
+	public List<WebElement> findElementsBySelector(WebElement webElement, String selector) {
+		if (selector == null) {
+			return Collections.emptyList();
+		}
+
+		if (webElement == null) {
+			return findElementsBySelector(selector);
+		}
+
+		return webElement.findElements(By.cssSelector(selector));
+	}
 	
-	public List<WebElement> findlementsBySelector(String selector, int waitTime) {
+	public List<WebElement> findElementsBySelector(String selector, int waitTime) {
 		return SeleniumUtils.waitAndSearchElements(selenium.getDriver(), waitTime, selector);
 	}
 	
 	public WebElement findFirstElementBySelector(String selector) {
 		return selenium.getDriver().findElement(By.cssSelector(selector));
+	}
+
+	public WebElement findFirstElementBySelector(WebElement webElement, String selector) {
+		if (selector == null) {
+			return null;
+		}
+
+		if (webElement == null) {
+			return findFirstElementBySelector(selector);
+		}
+
+		return webElement.findElement(By.cssSelector(selector));
 	}
 	
 	public WebElement findFirstElementBySelector(String selector, int waitTime) {
@@ -77,6 +102,15 @@ public class SeleniumManager {
 		if (element == null) return;
 		element.click();
 	}
+
+	public void click(WebElement webElement, Integer waitTimeOut) {
+		if (waitTimeOut == null) {
+			waitTimeOut = 1;
+		}
+
+		waitForVisibility(webElement, waitTimeOut);
+		click(webElement);
+	}
 	
 	public void navigateBack() {
 		selenium.getDriver().navigate().back();
@@ -90,15 +124,15 @@ public class SeleniumManager {
 		selenium.getDriver().navigate().refresh();
 	}
 	
-	public void waitForVisibility(WebElement element, int waitTime) {
-		(new WebDriverWait(getSelenium().getDriver(), waitTime)).until(ExpectedConditions.visibilityOf(element));
+	public void waitForVisibility(WebElement element, int waitTimeOut) {
+		(new WebDriverWait(getSelenium().getDriver(), waitTimeOut)).until(ExpectedConditions.visibilityOf(element));
 	}
 	
-	public void waitForVisibility(String selector, int waitTime) {
-		(new WebDriverWait(getSelenium().getDriver(), waitTime)).until(ExpectedConditions.visibilityOf(findFirstElementBySelector(selector)));
+	public void waitForVisibility(String selector, int waitTimeOut) {
+		(new WebDriverWait(getSelenium().getDriver(), waitTimeOut)).until(ExpectedConditions.visibilityOf(findFirstElementBySelector(selector)));
 	}
 	
-	public void init() {
+	public void doGet() {
 		selenium.getDriver().get(selenium.getUrl());
 	}
 	

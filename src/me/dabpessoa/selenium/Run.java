@@ -2,53 +2,61 @@ package me.dabpessoa.selenium;
 
 import java.util.List;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import me.dabpessoa.util.RegexUtils;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class Run {
 
 	public static void main(String[] args) {
-		
+
 //		SeleniumManager manager = new SeleniumManager("http://www.imdb.com", Selenium.createProxy("proxy", 8080, "diego.pessoa", ""));
-		SeleniumManager manager = new SeleniumManager("http://www.imdb.com");
-		manager.addURLPath("find");
+		SeleniumManager manager = new SeleniumManager("https://www.imdb.com");
+		manager.addURLPath("find/");
 		manager.addURLParam("ref_", "nv_sr_fn");
 		manager.addURLParam("s", "tt");
-		manager.addURLParam("q", "� Procura de Dory");
+		manager.addURLParam("q", "À Procura de Dory");
 		
-		manager.init();
-		
-		List<WebElement> movieResultsLinkElement = manager.findElementsBySelector("#main div.findSection > table > tbody > .findResult > td.result_text > a");
-		int size = movieResultsLinkElement.size();
+		manager.doGet();
+
+		String movieListSelector = "main ul.ipc-metadata-list > li.ipc-metadata-list-summary-item";
+		String movieInfoLinkSelector = "a.ipc-metadata-list-summary-item__t";
+		String movieTitleSelector = "h1 > span.hero__primary-text";
+		String movieReleaseYearSelector = "section.ipc-page-section ul > li.ipc-inline-list__item > a[href*='releaseinfo']";
+
+		List<WebElement> movieResults = manager.findElementsBySelector(movieListSelector);
+        int elementsSize = movieResults.size();
 		int count = 0;
-		while (count < size) {
-			WebElement movieResultLink = manager.findElementsBySelector("#main div.findSection > table > tbody > .findResult > td.result_text > a").get(count++);
-			
-			manager.waitForVisibility(movieResultLink, 10);
-			
-			manager.click(movieResultLink);
-			
-			WebElement movieTitleElement = manager.findFirstElementBySelector("#title-overview-widget > div.vital > div.title_block > div > div.titleBar > div.title_wrapper > h1");
-			
-			// Movie Title
-			String movieTitleText = movieTitleElement.getText();
-			movieTitleText = RegexUtils.replaceMatches("(\\([0-9]*\\)$)", movieTitleText, "");
-			if (movieTitleText != null) movieTitleText = movieTitleText.trim();
-			
-			// Ano de Lan�amento
-			String releaseYearString = RegexUtils.findFirstMatche("(\\([0-9]*\\)$)", movieTitleElement.getText());
-			Integer releaseYear = null;
-			if (releaseYearString != null && releaseYearString.trim().length() == 6) {
-				releaseYearString = releaseYearString.trim();
-				releaseYear = Integer.parseInt(releaseYearString.substring(1,5));
+
+			while (count < elementsSize) {
+				WebElement movieResult = movieResults.get(count++);
+				WebElement movieInfoLink = manager.findFirstElementBySelector(movieResult, movieInfoLinkSelector);
+
+				manager.click(movieInfoLink, 10);
+
+				// Movie Title
+				WebElement movieTitleElement = manager.findFirstElementBySelector(movieTitleSelector);
+				String movieTitleText = movieTitleElement.getText();
+				if (movieTitleText != null) {
+					movieTitleText = movieTitleText.trim();
+				}
+
+				// Ano de Lançamento
+				WebElement movieReleaseYearElement = manager.findFirstElementBySelector(movieReleaseYearSelector);
+				String movieReleaseYearText = movieReleaseYearElement.getText();
+				if (movieReleaseYearText != null) {
+					movieReleaseYearText = movieReleaseYearText.trim();
+				}
+
+				// Imprimir
+				System.out.println(movieTitleText+" => "+movieReleaseYearText);
+
+				manager.navigateBack();
+				// É necessário puxar a lista de filmes novamente para evitar erro de "Stale Element", pois houve navegação de página.
+				movieResults = manager.findElementsBySelector(movieListSelector);
 			}
-			
-			// Imprimir
-			System.out.println(movieTitleText+" => "+releaseYear);
-			
-			manager.navigateBack();
-		}
 		
 		manager.quit();
 	}
